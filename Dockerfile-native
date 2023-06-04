@@ -1,4 +1,4 @@
-#docker build -f Dockerfile-native -t docker-native:1.0 .
+#docker build -f Dockerfile-native -t docker-native:1.1 .
 FROM rust:1.70-slim-bullseye as build
 
 COPY Cargo.toml .
