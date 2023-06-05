@@ -1,10 +1,31 @@
-use std::env;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use reqwest::get;
 
-fn main() {
-    let args: Vec<String> = env::args().collect();
-    if args.len() > 1 {
-        println!("Hello, world!");
-    } else {
-        println!("Hello, {}!", args[1]);
+#[tokio::main(flavor = "current_thread")]
+async fn main() {
+    match get("http://httpbin.org/get").await {
+        Ok(response) => {
+            let result = response.json::<GetBody>().await;
+            match result {
+                Ok(json) => {
+                    println!("{:#?}", json);
+                }
+                Err(err) => {
+                    println!("{:#?}", err)
+                }
+            }
+        }
+        Err (err) => {
+            println!("{:#?}", err)
+        }
     }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct GetBody {
+    args: HashMap<String, String>,
+    headers: HashMap<String, String>,
+    origin: String,
+    url: String,
 }
